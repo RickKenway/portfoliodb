@@ -1,25 +1,57 @@
 <?php
-require_once '../includes/db.php';
+require_once '../config.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email");
-    $stmt->execute(['email' => $email]);
-    $user = $stmt->fetch();
+    if (!empty($email) && !empty($password)) {
+        $query = "SELECT id, password FROM users WHERE email = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($user && password_verify($password, $user['senha'])) {
-        $_SESSION['user_id'] = $user['id'];
-        header('Location: ../principal.php');
-        exit;
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                header('Location: ../index.php');
+                exit;
+            } else {
+                $error = 'Senha incorreta.';
+            }
+        } else {
+            $error = 'Usuário não encontrado.';
+        }
     } else {
-        $error = "Credenciais inválidas.";
+        $error = 'Por favor, preencha todos os campos.';
     }
 }
 ?>
 
-<form method="post" action="">
-    <label for="email">E-mail:</label>
-    <input type="email" name="email" required>
-    <label for
+<?php include '../includes/header.php'; ?>
+<main>
+    <section class="login-section">
+        <h1>Login</h1>
+        <?php if (!empty($error)): ?>
+            <p class="error-message"><?php echo $error; ?></p>
+        <?php endif; ?>
+        <form action="login.php" method="post" class="login-form">
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Entrar</button>
+        </form>
+        <p class="register-link">Ainda não tem uma conta? <a href="register.php">Cadastre-se aqui</a>.</p>
+    </section>
+</main>
+<?php include '../includes/footer.php'; ?>
