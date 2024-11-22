@@ -1,8 +1,15 @@
-<?php
+<?php 
 session_start();
-include '../includes/header.php';
-?>
 
+// Verificar se o usuário está logado
+if (!isset($_SESSION['user_id'])) {
+    // Se não estiver logado, redireciona para a página de login
+    header('Location: ../auth/login.php');
+    exit(); // Garante que o código abaixo não seja executado
+}
+
+include '../includes/header.php'; 
+?>
 <main>
     <section style="text-align: center; margin-top: 20px;">
         <h1 style="color: #1e1e2f; font-size: 2.5rem; margin-bottom: 10px;">Sobre Mim</h1>
@@ -51,5 +58,4 @@ include '../includes/header.php';
         </p>
     </section>
 </main>
-
 <?php include '../includes/footer.php'; ?>

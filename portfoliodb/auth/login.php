@@ -7,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password']);
 
     if (!empty($email) && !empty($password)) {
-        $query = "SELECT id, password FROM users WHERE email = ?";
+        // A tabela correta no banco de dados é 'usuarios', não 'users'
+        $query = "SELECT id, senha FROM usuarios WHERE email = ?";  // Alterado para 'usuarios' e 'senha'
         $stmt = $conn->prepare($query);
         $stmt->bind_param('s', $email);
         $stmt->execute();
@@ -15,9 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
+            // Verifica se a senha fornecida é válida
+            if (password_verify($password, $user['senha'])) {
+                // Armazena o id do usuário na sessão
                 $_SESSION['user_id'] = $user['id'];
-                header('Location: ../index.php');
+                header('Location: ../index.php');  // Redireciona para a página inicial
                 exit;
             } else {
                 $error = 'Senha incorreta.';

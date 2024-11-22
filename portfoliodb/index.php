@@ -1,4 +1,7 @@
-<?php include './includes/header.php'; ?>
+<?php 
+session_start();
+include './includes/header.php'; 
+?>
 <main>
     <section style="text-align: center;">
         <h1 style="color: #1e1e2f; font-size: 2.5rem;">Bem-vindo ao meu Portfólio!</h1>
@@ -16,7 +19,7 @@
                 </div>
                 <!-- Foto 2 -->
                 <div style="width: 200px; height: 200px; background-color: #ddd; display: flex; align-items: center; justify-content: center;">
-                <img src="assets/images/foto_2.jpeg" alt="Foto 1" style="width: 100%; height: 100%; object-fit: cover; object-position: center right;">
+                    <img src="assets/images/foto_2.jpeg" alt="Foto 1" style="width: 100%; height: 100%; object-fit: cover; object-position: center right;">
                 </div>
             </div>
         </div>

@@ -7,39 +7,39 @@ $error = ''; // Variável para armazenar erros de cadastro
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);
+    $senha = trim($_POST['senha']);  // Alterado para 'senha', pois essa é a coluna no banco
 
     // Validações simples
-    if (!empty($nome) && !empty($email) && !empty($password) && !empty($confirm_password)) {
-        if ($password === $confirm_password) {
-            // Verifica se o e-mail já está cadastrado
-            $query = "SELECT id FROM usuarios WHERE email = ?";
+    if (!empty($nome) && !empty($email) && !empty($senha)) {
+        // Verifica se o e-mail já está cadastrado
+        $query = "SELECT id FROM usuarios WHERE email = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            // Criptografa a senha antes de salvar no banco
+            $hashed_senha = password_hash($senha, PASSWORD_BCRYPT);  // Alterado para 'senha'
+
+            // Insere o novo usuário no banco
+            $query = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";  // Alterado para 'senha'
             $stmt = $conn->prepare($query);
-            $stmt->bind_param('s', $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $stmt->bind_param('sss', $nome, $email, $hashed_senha);  // Alterado para 'senha'
 
-            if ($result->num_rows === 0) {
-                // Criptografa a senha antes de salvar no banco
-                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+            if ($stmt->execute()) {
+                // Login automático após cadastro
+                $user_id = $stmt->insert_id;  // Obtém o id do usuário recém-criado
+                session_start();
+                $_SESSION['user_id'] = $user_id;  // Armazena o id do usuário na variável de sessão
 
-                // Insere o novo usuário no banco
-                $query = "INSERT INTO usuarios (nome, email, password) VALUES (?, ?, ?)";
-                $stmt = $conn->prepare($query);
-                $stmt->bind_param('sss', $nome, $email, $hashed_password);
-
-                if ($stmt->execute()) {
-                    header('Location: login.php'); // Redireciona para o login após o cadastro
-                    exit;
-                } else {
-                    $error = 'Erro ao cadastrar usuário. Tente novamente.'; // Mensagem de erro
-                }
+                header('Location: ../index.php'); // Redireciona para a página inicial após o cadastro bem-sucedido
+                exit;
             } else {
-                $error = 'E-mail já cadastrado.'; // Se o e-mail já existe
+                $error = 'Erro ao cadastrar usuário. Tente novamente.'; // Mensagem de erro
             }
         } else {
-            $error = 'As senhas não coincidem.'; // Se as senhas não forem iguais
+            $error = 'E-mail já cadastrado.'; // Se o e-mail já existe
         }
     } else {
         $error = 'Por favor, preencha todos os campos.'; // Se algum campo estiver vazio
@@ -70,13 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
-            </div>
-
-            <div class="form-group">
-                <label for="confirm_password">Confirmar Senha:</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirme sua senha" required>
+                <label for="senha">Senha:</label>  <!-- Alterado para 'senha' -->
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
             </div>
 
             <button type="submit" class="btn-submit">Cadastrar</button>
