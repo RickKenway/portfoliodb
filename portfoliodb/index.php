@@ -1,7 +1,15 @@
 <?php 
 session_start();
-include './includes/header.php'; 
 ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+<?php include 'includes/header.php'; ?>
 <main>
     <section style="text-align: center;">
         <h1 style="color: #1e1e2f; font-size: 2.5rem;">Bem-vindo ao meu Portfólio!</h1>
@@ -27,4 +35,6 @@ include './includes/header.php';
         <a href="./pages/projects.php" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #00adb5; color: #fff; text-decoration: none; border-radius: 5px; font-size: 1.1rem; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#007f8a'" onmouseout="this.style.backgroundColor='#00adb5'">Veja meus projetos</a>
     </section>
 </main>
-<?php include './includes/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>
+</body>
+</html>

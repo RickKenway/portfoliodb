@@ -44,7 +44,8 @@ if (isset($_GET['token'])) {
 <?php include '../includes/header.php'; ?>
 <main>
     <section class="reset-password-section">
-        <h1>Redefinir Senha</h1>
+        <h1 class="section-title">Redefinir Senha</h1>
+        <!-- Exibe mensagens de erro ou sucesso -->
         <?php if (!empty($error)): ?>
             <p class="error-message"><?php echo $error; ?></p>
         <?php elseif (!empty($message)): ?>
@@ -52,14 +53,15 @@ if (isset($_GET['token'])) {
         <?php endif; ?>
 
         <?php if (empty($message)): ?>
+        <!-- Formulário para redefinir senha -->
         <form action="redefinir.php?token=<?php echo htmlspecialchars($token); ?>" method="post" class="reset-password-form">
             <div class="form-group">
                 <label for="new_password">Nova Senha:</label>
-                <input type="password" id="new_password" name="new_password" placeholder="Digite sua nova senha" required>
+                <input type="password" id="new_password" name="new_password" placeholder="Digite sua nova senha" required class="input-field">
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirme a Nova Senha:</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirme sua nova senha" required>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirme sua nova senha" required class="input-field">
             </div>
             <button type="submit" class="btn-submit">Redefinir Senha</button>
         </form>
@@ -67,3 +69,69 @@ if (isset($_GET['token'])) {
     </section>
 </main>
 <?php include '../includes/footer.php'; ?>
+
+<style>
+    /* Estilos gerais para a página de redefinir senha */
+    .reset-password-section {
+        max-width: 600px;
+        margin: auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .section-title {
+        color: #1e1e2f;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+
+    .form-group label {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .btn-submit {
+        padding: 12px 25px;
+        background-color: #00adb5;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #00999b;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+
+    .success-message {
+        color: green;
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+</style>
